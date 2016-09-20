@@ -225,7 +225,7 @@
                     $('#ques').html(question[$questionArray[0]][$questionArray[1]]);
                    // $('#question_counter').html(indx);
 
-                    $('.counterwrapper').fadeOut(function () {
+                    $('.counterwrapper, .wrapper-video').fadeOut(function () {
                         window.clearTimeout(timeoutId);
                         countdown("countdown", 0, totalAnswerTimeFirst);
                         $('#quiz-answer').fadeIn(function () {
@@ -313,7 +313,7 @@
     </head>
 
     <body>
-        <div id="header">
+        <div id="header" class="navbar-fixed-top">
             <div class="container">
                 <div class="logo"><img alt="Leapfrog" src="assets/img/lflogo.jpg"></div>
             </div>
@@ -327,7 +327,7 @@
                         <div class="general-wrapper"></div>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-12 wrapper-video">
-                        <h1>Audio Visual</h1>
+                        <h1>Audio Visual Round</h1>
                         <div class="question-wrapper-video">
                             <span><a href="javascript:;" data-toggle="modal" data-target="#video1">1</a></span>
                             <span><a href="javascript:;" data-toggle="modal" data-target="#video2">2</a></span>
