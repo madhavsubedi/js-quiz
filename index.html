@@ -67,9 +67,6 @@
 
                 var audioElementTrueanswer = document.createElement('audio');
                 audioElementTrueanswer.setAttribute('src', 'correct.mp3');
-                
-                var audioRapidFire = document.createElement('audio');
-                audioRapidFire.setAttribute('src', 'rapidFire.mp3');
 
 
                 //PLAY BACKGROUND AUDIO ON LOAD
@@ -80,11 +77,11 @@
                 $(document).keypress(function(e) {
                     var timeout = 3000;
 
-                    if(e.which == 111) {
+                    if(e.which == 111) {//O
                         stopMusic(audioElementBackground);
                         audioElementOpening.play();
                         $('#opening').modal('show');
-                    } else if(e.which == 115) {
+                    } else if(e.which == 115) {//S
                         stopMusic(audioElementOpening);
                         audioElementBackground.play();
                         $('#opening').modal('hide');
@@ -122,23 +119,6 @@
                         // Type r
                          clearLocalStorage();
 
-                    } else if(e.which === 109) {
-                        // Rapid Fire
-                        stopMusic(audioElementBackground);
-                        audioRapidFire.play();
-                    } else if(e.which === 110) {
-                        // Rapid Fire
-                        stopMusic(audioRapidFire);
-                        audioElementWronganswer.play();
-                        audioElementBackground.play();
-
-                    }
-                    else if(e.which === 115) {
-                        // Rapid Fire
-                        stopMusic(audioRapidFire);
-                        stopMusic(audioElementWronganswer);
-                        audioElementBackground.play();
-
                     }
                 });
 
@@ -162,7 +142,7 @@
                                 element.innerHTML = 'Over';
                                 audioElementBackground.play();
                             } else {
-                                element.innerHTML = "<span style='color: #ee0000; font-size: 55px !important;'>Countdown's Over!</span>";                     }
+                                element.innerHTML = "<span style='color: #ee0000; font-size: 55px !important;'>Time Out!</span>";                     }
                         } else {
                             time = new Date(msLeft);
                             hours = time.getUTCHours();
@@ -235,23 +215,24 @@
                 $('.counterwrapper').on('click', 'span:not(".strike")', function () {
                     $(this).addClass('strike');
                     var indx = $(this).data('indx');
-                    console.log(indx);
-                    viewedQuestions.push(indx);
-                    localStorage.setItem('viewedQuestion', JSON.stringify(viewedQuestions));
+                    if(indx) {
+                        console.log(indx);
+                        viewedQuestions.push(indx);
+                        localStorage.setItem('viewedQuestion', JSON.stringify(viewedQuestions));
 
-                    //$('#ques').html(question[indx]);
-                    $questionArray = indx.split('-');
-                    $('#ques').html(question[$questionArray[0]][$questionArray[1]]);
-                   // $('#question_counter').html(indx);
+                        //$('#ques').html(question[indx]);
+                        $questionArray = indx.split('-');
+                        $('#ques').html(question[$questionArray[0]][$questionArray[1]]);
 
-                    $('.counterwrapper, .wrapper-video').fadeOut(function () {
-                        window.clearTimeout(timeoutId);
-                        countdown("countdown", 0, totalAnswerTimeFirst);
-                        $('#quiz-answer').fadeIn(function () {
-                            stopMusic(audioElementBackground);
-                            audioElementQuestion.play();
+                        $('.counterwrapper, .wrapper-video').fadeOut(function () {
+                            window.clearTimeout(timeoutId);
+                            countdown("countdown", 0, totalAnswerTimeFirst);
+                            $('#quiz-answer').fadeIn(function () {
+                                stopMusic(audioElementBackground);
+                                audioElementQuestion.play();
+                            });
                         });
-                    });
+                    }
 
                 });
                 
@@ -260,7 +241,9 @@
                 });
                 var currentRound = 'General';
                 $('.leap-wrapper').on('click', 'span:not(".strike")', function () {
-                    currentRound = 'Leap';
+                    if($(this).attr('class') != 'rapid-start') {
+                        currentRound = 'Leap';
+                    }
                 });
 
                 $('#close').click(function () {
@@ -293,6 +276,7 @@
                 });
                 $('#video1,#video2,#video3,#video4,#video5').on('hidden.bs.modal', function () {
                    audioElementBackground.play();
+                   window.clearTimeout(timeoutId);
                 })
 
                 //pass 
@@ -330,12 +314,30 @@
                     if($(this).html() != "Start") {
                         return false;
                     }
+                    currentRound = 'Rapid';
                     var rapidTeam = $(this).data('team');
                     var elementName = "rapid-counter-" + rapidTeam;
                     countdown(elementName, 0, 60, true);
                     stopMusic(audioElementBackground);
                     audioElementRapid.play();
                 });
+                var avelement = '';
+                $(".av-counter").click(function(){
+                    if($(this).html() != "Start") {
+                        return false;
+                    }
+                    $(this).removeClass('av-counter');
+                    $(this).addClass('countdown');
+                    avelement = $(this).attr('id');
+                    countdown(avelement, 0, 45);
+                    audioElementQuestion.play();
+                });
+                $(document).keypress(function(e) {
+                    if(e.which == 110) {
+                        window.clearTimeout(timeoutId);
+                        countdown(avelement, 0, 10);
+                    }
+                })
                 
              });
         </script>
@@ -397,23 +399,23 @@
                         <h1>Rapid Fire</h1>
                         <div class="leap-wrapper">
                             <h4>Set 1</h4>
-                            <span id="rapid-counter-1" data-team="1">Start</span>
+                            <span id="rapid-counter-1" data-team="1" data-index="rapid-1" class="rapid-start">Start</span>
                         </div>
                         <div class="leap-wrapper">
                             <h4>Set 2</h4>
-                            <span id="rapid-counter-2" data-team="2">Start</span>
+                            <span id="rapid-counter-2" data-team="2" data-index="rapid-2" class="rapid-start">Start</span>
                         </div>
                         <div class="leap-wrapper">
                             <h4>Set 3</h4>
-                            <span id="rapid-counter-3" data-team="3">Start</span>
+                            <span id="rapid-counter-3" data-team="3" data-index="rapid-3" class="rapid-start">Start</span>
                         </div>
                         <div class="leap-wrapper">
                             <h4>Set 4</h4>
-                            <span id="rapid-counter-4" data-team="4">Start</span>
+                            <span id="rapid-counter-4" data-team="4" data-index="rapid-4" class="rapid-start">Start</span>
                         </div>
                         <div class="leap-wrapper">
                             <h4>Set 5</h4>
-                            <span id="rapid-counter-5" data-team="5">Start</span>
+                            <span id="rapid-counter-5" data-team="5" data-index="rapid-5" class="rapid-start">Start</span>
                         </div>
                     </div>
                 </div>
@@ -437,6 +439,9 @@
                               <source src="av/1.mp3" type="audio/mp3">
                               Your browser does not support the audio element.
                             </audio>
+                            <div class="row">
+                                <span id="av-counter-1" data-av="1" class="av-counter">Start</span>
+                            </div>
                         </div>
 
                     </div>
@@ -453,7 +458,10 @@
                              <video width="320" height="240" controls>
                                 <source src="av/2.mp4" type="video/mp4">                                
                                 Your browser does not support the video tag.
-                            </video>                          
+                            </video> 
+                            <div class="row">
+                                <span id="av-counter-2" data-av="1" class="av-counter">Start</span>
+                            </div>                         
                         </div>
                         
                     </div>
@@ -471,7 +479,9 @@
                                  <source src="av/3.mp4" type="video/mp4">                                
                                 Your browser does not support the video tag.
                             </video>
-                          
+                            <div class="row">
+                                <span id="av-counter-3" data-av="1" class="av-counter">Start</span>
+                            </div>
                         </div>
                         
                     </div>
@@ -489,7 +499,9 @@
                                 <source src="av/4.mp4" type="video/mp4">                                
                                 Your browser does not support the video tag.
                             </video>
-                          
+                            <div class="row">
+                                <span id="av-counter-4" data-av="1" class="av-counter">Start</span>
+                            </div>
                         </div>
                         
                     </div>
@@ -507,7 +519,9 @@
                                  <source src="av/5.mp4" type="video/mp4">                                
                                 Your browser does not support the video tag.
                             </video>
-                          
+                            <div class="row">
+                                <span id="av-counter-5" data-av="1" class="av-counter">Start</span>
+                            </div>
                         </div>
                         
                     </div>
