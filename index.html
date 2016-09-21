@@ -49,7 +49,18 @@
                 audioElementBackground.setAttribute('src', 'background.mp3');
 
                 var audioElementQuestion = document.createElement('audio');
+                audioElementQuestion.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
                 audioElementQuestion.setAttribute('src', 'question3.mp3');
+
+                var audioElementRapid = document.createElement('audio');
+                audioElementRapid.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+                audioElementRapid.setAttribute('src', 'rapid.mp3');
 
                 var audioElementWronganswer = document.createElement('audio');
                 audioElementWronganswer.setAttribute('src', 'wrongAnswer.mp3');
@@ -298,6 +309,7 @@
                     $('#quiz-answer').fadeOut(function () {
                         $('#countdown').html('');
                         stopMusic(audioElementQuestion);
+                        stopMusic(audioElementRapid);
                         audioElementBackground.play();
                         $('.counterwrapper').fadeIn();
                         $('.wrapper-video').fadeIn();
@@ -322,7 +334,7 @@
                     var elementName = "rapid-counter-" + rapidTeam;
                     countdown(elementName, 0, 60, true);
                     stopMusic(audioElementBackground);
-                    audioElementQuestion.play();
+                    audioElementRapid.play();
                 });
                 
              });
