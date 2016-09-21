@@ -42,8 +42,11 @@
             $(function () {
 
                 //Audio Elements
+                var audioElementOpening = document.createElement('audio');
+                audioElementOpening.setAttribute('src', 'opening.mp3');
+
                 var audioElementBackground = document.createElement('audio');
-                audioElementBackground.setAttribute('src', 'backgroundmusic.mp3');
+                audioElementBackground.setAttribute('src', 'background.mp3');
 
                 var audioElementQuestion = document.createElement('audio');
                 audioElementQuestion.setAttribute('src', 'question3.mp3');
@@ -62,14 +65,19 @@
                 audioElementBackground.play();
 
                 var timeoutId = "";
-
-
-
+                
                 $(document).keypress(function(e) {
-
                     var timeout = 3000;
 
-                    if(e.which == 112) {
+                    if(e.which == 111) {
+                        stopMusic(audioElementBackground);
+                        audioElementOpening.play();
+                        $('#opening').modal('show');
+                    } else if(e.which == 115) {
+                        stopMusic(audioElementOpening);
+                        audioElementBackground.play();
+                        $('#opening').modal('hide');
+                    } else if(e.which == 112) {
                         //pass
                         // Type p
                         passAnswer();
@@ -239,6 +247,10 @@
                 $('.question-wrapper-video').on('click', 'span:not(".strike")', function () {
                     $(this).addClass('strike');
                 });
+                var currentRound = 'General';
+                $('.leap-wrapper').on('click', 'span:not(".strike")', function () {
+                    currentRound = 'Leap';
+                });
 
                 $('#close').click(function () {
                     window.clearTimeout(timeoutId);
@@ -266,7 +278,7 @@
 
                //stop the background sound
                 $('#video1,#video2,#video3,#video4,#video5').on('show.bs.modal', function (e) {
-                     audioElementBackground.pause();
+                   audioElementBackground.pause();
                 });
                 $('#video1,#video2,#video3,#video4,#video5').on('hidden.bs.modal', function () {
                    audioElementBackground.play();
@@ -288,7 +300,12 @@
                         stopMusic(audioElementQuestion);
                         audioElementBackground.play();
                         $('.counterwrapper').fadeIn();
+                        $('.wrapper-video').fadeIn();
                     });
+                    
+                    if(currentRound == 'Leap') {
+                        $("html, body").animate({ scrollTop: 1200 }, "slow");
+                    }
                 }
                 //reset localStorage
                 function clearLocalStorage(){
@@ -296,12 +313,13 @@
                     window.location = window.location;                    
                 }
                 
+                var rapidTeam = 0;
                 $(".rapid-group div span").click(function(){
                     if($(this).html() != "Start") {
                         return false;
                     }
-                    var team = $(this).data('team');
-                    var elementName = "rapid-counter-" + team;
+                    var rapidTeam = $(this).data('team');
+                    var elementName = "rapid-counter-" + rapidTeam;
                     countdown(elementName, 0, 60, true);
                     stopMusic(audioElementBackground);
                     audioElementQuestion.play();
@@ -322,7 +340,7 @@
         <div id="wrapper">
             <div class="container">
                 <div class="row questions-block">
-                    <div class="col-sm-12 col-md-12 col-lg-12 counterwrapper">
+                    <div class="col-sm-12 col-md-12 col-lg-12 counterwrapper general-round">
                         <h1>General Round</h1>
                         <div class="general-wrapper"></div>
                     </div>
@@ -338,50 +356,50 @@
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-12 counterwrapper">
                         <h1>Leap Round</h1>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>History</h4>
                             <div class="leaph-wrapper"></div>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Contemporary</h4>
                             <div class="leapc-wrapper"></div>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Science &amp; Technology</h4>
                             <div class="leapst-wrapper"></div>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Software Engineering</h4>
                             <div class="leapse-wrapper"></div>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Entertainment</h4>
                             <div class="leape-wrapper"></div>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Sports</h4>
                             <div class="leaps-wrapper"></div>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-12 counterwrapper rapid-group">
                         <h1>Rapid Fire</h1>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Set 1</h4>
                             <span id="rapid-counter-1" data-team="1">Start</span>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Set 2</h4>
                             <span id="rapid-counter-2" data-team="2">Start</span>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Set 3</h4>
                             <span id="rapid-counter-3" data-team="3">Start</span>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Set 4</h4>
                             <span id="rapid-counter-4" data-team="4">Start</span>
                         </div>
-                        <div class="leap-wapper">
+                        <div class="leap-wrapper">
                             <h4>Set 5</h4>
                             <span id="rapid-counter-5" data-team="5">Start</span>
                         </div>
@@ -480,6 +498,15 @@
                           
                         </div>
                         
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="opening" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog-opening">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <img src="assets/img/opening.jpg"/>                          
+                        </div>
                     </div>
                 </div>
             </div>

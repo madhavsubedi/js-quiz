@@ -237,7 +237,7 @@ p.copyright {
     color: #5f8e19;    
 }
 
-.leap-wapper {
+.leap-wrapper {
     width: 215px;
     height: 150px;
     float: left;
@@ -245,13 +245,13 @@ p.copyright {
     margin-right: 5px;
 }
 
-.rapid-group .leap-wapper {
+.rapid-group .leap-wrapper {
     width: 260px;
     text-align: center;
     border: none;
 }
 
-.rapid-group .leap-wapper span.strike {
+.rapid-group .leap-wrapper span.strike {
     text-decoration: none;
 }
 
@@ -269,4 +269,9 @@ p.copyright {
 
 #display-question {
     margin-top: -100px;
+}
+
+.modal-dialog-opening {
+    width: auto !important;
+    height: auto !important;
 }
